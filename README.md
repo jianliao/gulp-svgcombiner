@@ -1,4 +1,7 @@
 # gulp-svgcombiner
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/adobe/gulp-svgcombiner.svg)](https://greenkeeper.io/)
+
 > A gulp plugin for svgcombiner
 
 ## Usage
