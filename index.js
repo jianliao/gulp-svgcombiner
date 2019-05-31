@@ -26,7 +26,8 @@ module.exports = function(options) {
     processClass: function(filePath) {
       // The first folder name
       return path.dirname(filePath).split(path.sep).pop();
-    }
+    },
+    skipSingle: false
   }, options);
 
   // Hash to hold all icons arranged by processed name
@@ -79,8 +80,12 @@ module.exports = function(options) {
       var combinedFile = file.clone({ contents: false });
       combinedFile.path = path.join(file.base, icon + '.svg');
 
-      // Combine all SVGs
-      combinedFile.contents = new Buffer(svgcombiner(icon, icons[icon]));
+      if (options.skipSingle && Object.keys(icons[icon]).length < 2) {
+        combinedFile.contents = file.contents;
+      } else {
+        // Combine all SVGs
+        combinedFile.contents = new Buffer(svgcombiner(icon, icons[icon]));
+      }
 
       // Emit downstream
       this.push(combinedFile);

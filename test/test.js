@@ -142,3 +142,59 @@ test('should ignore empty files', function(t) {
     t.end();
   });
 });
+
+test.cb('should ignore single files if options.skipSingle is true', function (t) {
+  // Create the fake files
+  var medium = getFakeFile('test/medium/S_UICornerTriangle_5_N@1x.svg');
+
+  var combiner = svgcombiner({
+    skipSingle: true
+  });
+
+  // write the fake file to it
+  combiner.write(medium);
+  combiner.end();
+
+  // wait for the file to come back out
+  combiner.once('data', function(file) {
+    // make sure it came out the same way it went in
+    t.truthy(file.isBuffer());
+
+    // check the contents
+    t.is(format(file.contents.toString('utf8')), format(fs.readFileSync('test/medium/S_UICornerTriangle_5_N@1x.svg', 'utf8')));
+    t.end();
+  });
+});
+
+test.cb('should still combine SVGs even options.skipSingle is true', function(t) {
+  // Create the fake files
+  var medium = getFakeFile('test/medium/S_UICornerTriangle_5_N@1x.svg');
+  var large = getFakeFile('test/large/S_UICornerTriangle_6_N@1x.svg');
+
+  // Create a plugin stream
+  var combiner = svgcombiner({
+    processName: function(filePath) {
+      return 'spectrum-css-icon-' + path.basename(filePath, path.extname(filePath)).replace(/S_UI(.*?)_.*/, '$1');
+    },
+    processClass: function(filePath) {
+      // Return the last directory
+      return 'spectrum-UIIcon--' + path.dirname(filePath).split(path.sep).pop();
+    },
+    skipSingle: true
+  });
+
+  // write the fake file to it
+  combiner.write(medium);
+  combiner.write(large);
+  combiner.end();
+
+  // wait for the file to come back out
+  combiner.once('data', function(file) {
+    // make sure it came out the same way it went in
+    t.truthy(file.isBuffer());
+
+    // check the contents
+    t.is(format(file.contents.toString('utf8')), format(fs.readFileSync('test/CornerTriangle.svg', 'utf8')));
+    t.end();
+  });
+});

@@ -56,7 +56,7 @@ The result would be
 </svg>
 ```
 
-Assuming you've embeded this SVG in the page and referenced the symbol with `<use>`:
+Assuming you've embedded this SVG in the page and referenced the symbol with `<use>`:
 
 ```
 <div class="checkbox">
@@ -128,6 +128,18 @@ This function serves two purposes:
 2. Name your icons
 
 For instance, if you have an icon naming convention that includes the size of the icon, your `processName` function should remove the size of the icon from the name, as well as strip the extension and any other irrelevant text.
+
+##### options.processClass(filePath)
+Type: `function`
+Default: The parent folder name
+
+This function give you a chance to customize the value of CSS class attribute.
+
+##### options.skipSingle
+Type: `boolean`
+Default: False
+
+Set it to true if you want to skip the svg file which has no identical name counterpart to combine. The original content of the file will be output.
 
 ### Contributing
 
